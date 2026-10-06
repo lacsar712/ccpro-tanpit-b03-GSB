@@ -24,6 +24,11 @@ class Pit(models.Model):
     STATUS_TANNING = "tanning"
     STATUS_DRAINED = "drained"
 
+    # 放液三勾：渠盖已盖、刮板已收、护栏已复位。默认皆 False，空勾不算齐。
+    cover_closed = models.BooleanField(default=False, verbose_name="渠盖已盖")
+    scraper_stowed = models.BooleanField(default=False, verbose_name="刮板已收")
+    rail_reset = models.BooleanField(default=False, verbose_name="护栏已复位")
+
     yard = models.ForeignKey(Yard, on_delete=models.CASCADE, related_name="pits")
     code = models.CharField(max_length=40)
     status = models.CharField(max_length=20, default=STATUS_FILL)
@@ -32,6 +37,9 @@ class Pit(models.Model):
 
     class Meta:
         unique_together = ("yard", "code")
+
+    def drain_checks_complete(self) -> bool:
+        return self.cover_closed and self.scraper_stowed and self.rail_reset
 
 
 class LiquorSample(models.Model):

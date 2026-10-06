@@ -22,6 +22,11 @@ def seed_demo() -> None:
         ("西-2", Pit.STATUS_DRAINED, 2, 1, 3.8),
     ]
     for code, status, row, col, ph in layout:
-        pit = Pit.objects.create(yard=yard, code=code, status=status, row=row, col=col)
+        # 已放液的示范坑三勾按已齐处理。
+        checks_on = status == Pit.STATUS_DRAINED
+        pit = Pit.objects.create(
+            yard=yard, code=code, status=status, row=row, col=col,
+            cover_closed=checks_on, scraper_stowed=checks_on, rail_reset=checks_on,
+        )
         if ph is not None:
             LiquorSample.objects.create(pit=pit, ph=ph, operator="worker")
