@@ -39,3 +39,14 @@ class LiquorSample(models.Model):
     taken_at = models.DateTimeField(auto_now_add=True)
     ph = models.FloatField()
     operator = models.CharField(max_length=64, blank=True)
+
+
+class DrainChecklist(models.Model):
+    """放液三勾：渠盖已盖、刮板已收、护栏已复位。无记录视为三勾全未勾。"""
+
+    pit = models.OneToOneField(Pit, on_delete=models.CASCADE, related_name="checklist")
+    cover_closed = models.BooleanField(default=False)
+    scraper_stowed = models.BooleanField(default=False)
+    guard_restored = models.BooleanField(default=False)
+    updated_by = models.CharField(max_length=64, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)

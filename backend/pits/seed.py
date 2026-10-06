@@ -1,4 +1,4 @@
-from pits.models import LiquorSample, Pit, User, Yard
+from pits.models import DrainChecklist, LiquorSample, Pit, User, Yard
 
 
 def seed_demo() -> None:
@@ -25,3 +25,11 @@ def seed_demo() -> None:
         pit = Pit.objects.create(yard=yard, code=code, status=status, row=row, col=col)
         if ph is not None:
             LiquorSample.objects.create(pit=pit, ph=ph, operator="worker")
+        if status == Pit.STATUS_DRAINED:
+            DrainChecklist.objects.create(
+                pit=pit,
+                cover_closed=True,
+                scraper_stowed=True,
+                guard_restored=True,
+                updated_by="admin",
+            )
